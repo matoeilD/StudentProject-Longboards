@@ -1212,9 +1212,13 @@ ul.social-icons3{
 	 padding: 10px;
  }
 
+
+ .text-desc h6,p,a {
+ color: #fff;
+ }
  
 .text-desc h5{
- 
+ color: #fff;
  font-weight: bold;
  }
  
@@ -2776,5 +2780,9 @@ ul.social-icons.two {
 	}
 	
 	
+<<<<<<< HEAD
 
+=======
+}
+>>>>>>> 5069c9c659168543011ecb1f4575ae1b07e2cee3
 /*--//responsive-design---*/

@@ -85,7 +85,7 @@ sub {
   bottom: -.25em;
 }
 img {
-  border: 10px;
+  border: 0;
 }
 svg:not(:root) {
   overflow: hidden;
@@ -1119,9 +1119,12 @@ figure {
 }
 img {
   vertical-align: middle;
+<<<<<<< HEAD
   width:250px;
   height: 300px;
   
+=======
+>>>>>>> 5069c9c659168543011ecb1f4575ae1b07e2cee3
 }
 .img-responsive{
   display: inline-block;
