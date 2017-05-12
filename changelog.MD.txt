@@ -1,0 +1,2 @@
+-debut de creation de db pour stocker et afficher de manière dynamique  les produits et les marques
+-debut de formulaire de connection
