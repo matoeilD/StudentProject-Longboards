@@ -44,7 +44,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	</script>
 <!-- //swipe box js -->
 
-
+    <!--//BALISE JAVA-->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript"> // COMMENT OUVRIR UNE BALISE JAVA /*Works only with Chrome*/
+      $('#range').on("input", function() {
+        $('.output').val(this.value +",000  $" );
+      }).trigger("change");
+    </script>
 <!--web-fonts-->
 	<link href='//fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 <link href='//fonts.googleapis.com/css?family=Poppins:400,500,600' rel='stylesheet' type='text/css'>
@@ -127,6 +133,36 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 								</span>
 							</a>
 
+                      <?php
+                      if(isset($_SESSION['login'])){
+                        echo
+                          '<a href="logout.php" class="hover-effect">
+								<span>
+									<span>'.$_SESSION['login'].'</span>
+									<span>Se déconnecter</span>
+									<span></span>
+								</span>
+							</a>';
+                      }else{
+                        echo
+                        '<a href="espacemembre.php" class="hover-effect">
+								<span>
+									<span>Connexion</span>
+									<span>Inscription</span>
+									<span></span>
+								</span>
+							</a>';
+                      }
+                      ?>
+
+                        <a href="bot/indexbot.php" class="hover-effect">
+								<span>
+									<span>CHATBOT</span>
+									<span>CHATBOT</span>
+									<span></span>
+								</span>
+                        </a>
+
 					</div>
 				</div>
 
@@ -151,80 +187,128 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				
 	    </div>
 	  <!--//end-banner-->
-        
-<div class="content-bottom" id="news">
-	<div class="inner-w3 agl">
-					<h3 class="title">Nos PLANCHES<span></span></h3>
-				</div>
 
 
 
-<?php
 
+
+  <?php
   $bdd = new PDO('mysql:host=localhost;dbname=snowboard', 'root', '', array( PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8") );
+  function afficherFormulaire () {
+    print "<h4 class='filtrebulle'> FILTRES - BULLES <h4>
+	
+	<form action='' method='POST'>
+		<div class='categorie'>
+			<label class='categorie' for='type'> CATÉGORIE : </label>
+				<input type='radio' name='type' value='cruising' checked> <label for='cruising'> CRUISING </label>
+				<input type='radio' name='type' value='slalom'> <label for='slalom'> SLALOM </label>
+				<input type='radio' name='type' value='freestyle'> <label for='freestyle'> FREESTYLE </label>
+				<input type='radio' name='type' value='dancing'> <label for='dancing'> DANCING </label>
+				<input type='radio' name='type' value='slide'> <label for='slide'> SLIDE </label>
+	
+			<p class='budget'>What is your budget?</p>
+				<label for='range'>
+				<input type='range' name='range' id='range' min='0' max='300' step='5' value='175'/>
+				</label>
+				<output for='range' class='output'></output>
+		
+			   <input class='boutonrechercher' type='submit' value='submit'>
+		</div>	
+	</form>
+	<br>";
+    var_dump($_POST);
+  }
 
-$sql= "SELECT * FROM longboards";
-	foreach ($bdd->query($sql) as $row) {
-		$longboards []=$row; 
-	}
-	//var_dump($longboards);
+  afficherFormulaire ();
+
+  if (isset($_POST['type'])) {
+    $type = $_POST['type'];
+  }
+
+  if (isset($_POST['submit'])) {
+    $submit = $_POST['submit'];
+  }
 
 
-	function genererproduits ($tablongboards) {
-		//var_dump($tablongboards);
-		foreach ($tablongboards as $row) {
+  ?><br><?php
+    if (isset ($_POST['slalom']) == 'type') {
+      $slalom = $_POST["slalom"];
+      $sql= "SELECT * FROM longboards WHERE condition = slalom";
+    }
+    else if (isset ($_POST['freestyle']) == '$type') {
+      $freestyle = $_POST["freestyle"];
+      $sql= "SELECT * FROM longboards WHERE condition = freestyle";
+    }
+    else if (isset ($_POST['dancing']) == '$type') {
+      $dancing = $_POST["dancing"];
+      $sql= "SELECT * FROM longboards WHERE condition = dancing";
+    }
+    else if (isset ($_POST['slide']) == 'type') {
+      $slide = $_POST["slide"];
+      $sql= "SELECT * FROM longboards WHERE condition = slide";
+    }
+    else if (isset ($_POST['cruising']) == 'type') {
+      //else if ($type = $cruising)
+      $cruising = $_POST["cruising"];
+      $sql= "SELECT * FROM longboards WHERE condition = cruising";
+    }
+    //var_dump($longboards);
+
+    $sql= "SELECT * FROM longboards";
+    //$sql= "SELECT * FROM longboards WHERE type = '$Type'";
+    foreach ($bdd->query($sql) as $row) {
+      $longboards []=$row;
+    }
 
 
-			$html='<div class="content-in">
-            <div class="port effect-1">
-                <div class="image-box">';
-                   $html.='<a>';
-                   $html.= '<img src="';
-                  // $html.=$row['imageproduit'];
-                   $html.='" class="img-responsive"></a>
-               </div>
-                <div class="text-desc">';
-			//var_dump($row['Nom']);
-		//	var_dump($row['Longueur']);
-		//$html='<h1>ttttttttttttttt</h1>';	
-		$html.= '<h3>';
-		//$html.=$row['Nom'];
-		$html.='</h3>';
 
-		$html.= '<p>Longueur : ';
-		$html.=$row['Longueur'];
-		$html.='</p>';
+  function genererproduits ($input) {
+    //var_dump($tablongboards);
+    $bdd = new PDO('mysql:host=localhost;dbname=snowboard', 'root', '', array( PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8") );
+    $sql= "SELECT * FROM ".$input." ORDER BY id DESC LIMIT 4"; //Séléctionner maximum 4 produits à afficher sur la page index pour chaque prduit d'une manière inversée
+    foreach ($bdd->query($sql) as $row) {
+      $result []=$row;
+    }
+    foreach ($result as $row) {
+      if ($input == "longboards"){
+        $html='<div class="content-in"><div class="port effect-1"><div class="image-box"><a href="fiche.php?idProduit='.$row['id'].'"><img src="'.$row['imageproduit'].'" class="img-responsive"></a></div>
+                            <div class="text-desc"><h3>'.$row['Nom'].'</h3><p>Longueur : '.$row['Longueur'].'</p><p>Largueur : '.$row['Largeur'].'</p><p>Poids : '.$row['Poids'].'</p><p>Prix : '.$row['Prix'].'</p><h4>'.$row['Type'].'</h4><a href="produitdetail.php?cat='.$input.'&id='.$row['id'].'">commander</a></div></div></div>';
+      }
 
-		$html.= '<p>Largueur : ';
-		$html.=$row['Largeur'];
-		$html.='</p>';
+      if ($input == "trucks"){
+        $html='<div class="content-in"><div class="port effect-1"><div class="image-box"><a href="produitdetail.php?cat='.$input.'&id='.$row['id'].'"><img src="'.$row['imageproduit'].'" class="img-responsive"></a></div><div class="text-desc">'.'<h3>'.$row['nom'].'</h3><p>Longboard : '.$row['longboard'].'</p><p>Angle : '.$row['angle'].'</p></p><p>Couleur : '.$row['couleur'].'</p><p>Prix : '.$row['prix'].'</p></div></div></div>';
+      }
 
-		$html.= '<p>Poids : ';
-		$html.=$row['Poids'];
-		$html.='</p>';
+      if ($input == "roues"){
+        $html='<div class="content-in"><div class="port effect-1"><div class="image-box"><a href="produitdetail.php?cat='.$input.'&id='.$row['id'].'"><img src="'.$row['imageproduit'].'" class="img-responsive"></a></div><div class="text-desc">'.'<h3>'.$row['nom'].'</h3><p>Size: '.$row['size'].'</p><p>Prix : '.$row['prix'].'</p></div></div></div>';
+      }
+      print $html;
+    }
+  }
+  ?>
 
-		$html.= '<p>Prix : ';
-		$html.=$row['Prix'];
-		$html.='</p>';
 
-		$html.= '<h4>';
-		$html.=$row['Type'];
-		$html.='</h4>';
 
-		$html.='
-                </div>
-            </div>
-           
- </div>';
-     /*   $html.= '<p>Width : 22,25cm</p>';
-		$html.= '<p>Weight : 1,5kg</p>';
-		$html.= '<p>Price : 180€</p>';*/
-	print $html;	
-		}
-	}
-	genererproduits($longboards);
-?>
-<div></div>
+    <div class="content-bottom" id="news">
+        <div class="inner-w3 agl">
+            <h3 class="title">Nos PLANCHES<span></span></h3>
+          <?php genererproduits("longboards"); ?>
+        </div>
+    </div>
+
+    <div class="content-bottom" id="news" style="clear:both">
+        <div class="inner-w3 agl">
+            <h3 class="title">Nos TRUCKS<span></span></h3>
+          <?php genererproduits("trucks"); ?>
+        </div>
+    </div>
+
+    <div class="content-bottom" id="news" style="clear:both">
+        <div class="inner-w3 agl">
+            <h3 class="title">Nos ROUES<span></span></h3>
+          <?php genererproduits("roues"); ?>
+        </div>
+    </div>
 
  <!--//PHP-->
 
@@ -374,26 +458,66 @@ $sql= "SELECT * FROM longboards";
 		</div>
 	</div>
 </div>
-<!-- //footer -->
 
-	<!--//main content start-->
-	<!--start-smooth-scrolling-->
-						<script type="text/javascript">
-									$(document).ready(function() {
-										/*
-										var defaults = {
-								  			containerID: 'toTop', // fading element id
-											containerHoverID: 'toTopHover', // fading element hover id
-											scrollSpeed: 1200,
-											easingType: 'linear' 
-								 		};
-										*/
-										
-										$().UItoTop({ easingType: 'easeOutQuart' });
-										
-									});
-								</script>
-								<!--end-smooth-scrolling-->
+
+    <div class="container"
+         style="margin-bottom: 100px;">
+        <div class
+        "row">
+        <div class="col-md-12">
+            <tr>
+                <td colspan="3"><strong>Envoyer un
+                        message</strong></td>
+            </tr>
+
+            <!--Trois champs sont insérés ensuite pour que les utilisateurs du site puissent remplir ces informations-->
+            <form action="receiveform.php"
+                  method="post">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="inputnom">Nom</label>
+                        <input type="text" name="nom"
+                               id="inputnom"
+                               class="form-control"
+                               placeholder="Saisir votre nom">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="inputemail">Email</label>
+                        <input type="email" name="email"
+                               id="inputemail"
+                               class="form-control"
+                               placeholder="Saisir votre email">
+                    </div>
+                </div>
+
+                <!--Les utilisateurs doivent obligatoirement renseigner une adresse e-mail pour pouvoir valider le formulaire grace à l'input type="email" -->
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label id="textMessage">Message</label>
+                        <textarea name="message"
+                                  class="form-control"
+                                  id="textMessage">
+			</textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="submit"
+                               name="formValidate"
+                               value="envoyer"
+                               class="form-control"
+                               style="background-color: #f5a02b"
+                               ; width="150px">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div></div>
+
 		<a href="#home" id="toTop" class="scroll" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
 	<!-- //for bootstrap working -->
 <script src="js/bootstrap.js"></script>

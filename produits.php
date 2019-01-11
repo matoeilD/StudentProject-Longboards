@@ -170,9 +170,9 @@ $sql= "SELECT * FROM longboards";
 			$html='<div class="content-in">
             <div class="port effect-1">
                 <div class="image-box">';
-                   $html.='<a>';
+                   $html.='<a href="fiche.php?idProduit=1">';
                    $html.= '<img src="';
-                  // $html.=$row['imageproduit'];
+                   $html.=$row['Image'];
                    $html.='" class="img-responsive"></a>
                </div>
                 <div class="text-desc">';

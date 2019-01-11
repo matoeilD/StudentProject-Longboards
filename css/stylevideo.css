@@ -1,0 +1,33 @@
+form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 50px;
+}
+
+form input{
+    margin: 10px;
+    padding: 8px 20px;
+}
+
+#block-youtube{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+}
+
+#block-youtube img{
+    width: auto;
+    height: 60px;
+}
+
+ul{
+    margin: 0;
+    padding: 0;
+    width: 500px;
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+}
